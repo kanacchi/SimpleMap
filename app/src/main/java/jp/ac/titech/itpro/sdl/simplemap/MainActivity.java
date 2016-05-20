@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 
 public class MainActivity extends AppCompatActivity implements
@@ -43,6 +45,15 @@ public class MainActivity extends AppCompatActivity implements
             Manifest.permission.ACCESS_FINE_LOCATION
     };
     private final static int REQCODE_PERMISSIONS = 1111;
+
+
+    private Location location;
+
+    public void onClickCurrentLocation(View view) {
+        Log.d(TAG, "onLocationChanged: " + location);
+        googleMap.animateCamera(CameraUpdateFactory
+                .newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,9 +131,10 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "onLocationChanged: " + location);
+        this.location = location;
+        /*Log.d(TAG, "onLocationChanged: " + location);
         googleMap.animateCamera(CameraUpdateFactory
-                .newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+                .newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));*/
     }
 
     @Override
@@ -134,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements
             startLocationUpdate(false);
             break;
         }
+
     }
 
     private void startLocationUpdate(boolean reqPermission) {
